@@ -281,8 +281,8 @@ async def delete_telegram_info(
 ########################################################################
 
 
-@router.get("/static-dash", summary="DMM Daily图表数据")
-async def get_static_dash(
+@router.get("/statics-dash", summary="DMM Daily图表数据")
+async def get_statics_dash(
         sn: str = Query(..., description="SN编码"),
 ):
     # datas = await monitor_controller.model.filter(sn=sn).order_by("report_time").all()
