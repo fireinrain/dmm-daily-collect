@@ -103,3 +103,79 @@ class MonitorSet(BaseModel, TimestampMixin):
 
     def __str__(self) -> str:
         return f"{self.sn}:{self.api_url}:{self.fetch_interval}:{self.enable}"
+
+
+# dmm 数据
+class DmmTask(BaseModel, TimestampMixin):
+    fetch_url = fields.CharField(max_length=200, description='任务爬取链接')
+    has_run = fields.BooleanField(default=False, description="是否已经运行")
+    run_date = fields.CharField(max_length=25, description="开始运行时间")
+
+    class Meta:
+        table = "dmm_av_daily"
+
+    def __str__(self) -> str:
+        return f"{self.fetch_url}:{self.has_run}:{self.run_date}"
+
+
+# 影片详情数据
+class FilmDetail(BaseModel, TimestampMixin):
+    film_detail_url = fields.CharField(max_length=255)
+    film_pic_url = fields.CharField(max_length=255)
+    film_poster_url = fields.CharField(max_length=255)
+    film_title = fields.CharField(max_length=255)
+    film_publish_date = fields.CharField(max_length=255)
+    film_sell_date = fields.CharField(max_length=255)
+    film_length = fields.CharField(max_length=255)
+    film_stars = fields.CharField(max_length=255)
+    film_director = fields.CharField(max_length=255)
+    film_series = fields.CharField(max_length=255)
+    film_producers = fields.CharField(max_length=255)
+    film_brand = fields.CharField(max_length=255)
+    film_content_type = fields.CharField(max_length=255)
+    film_type = fields.CharField(max_length=255)
+    film_tags = fields.CharField(max_length=255)
+    film_code = fields.CharField(max_length=255)
+    film_desc = fields.CharField(max_length=500)
+    film_sample_image_prefix = fields.CharField(max_length=255)
+    film_sample_images = fields.CharField(max_length=800)
+    del_flag = fields.BooleanField(null=True, default=False)
+
+    class Meta:
+        table_name = 'film_detail_item'
+
+    def __str__(self):
+        return f"{self.id}: {self.film_title}"
+
+
+# 影片简介
+class FilmIntro(BaseModel, TimestampMixin):
+    film_title = fields.CharField(max_length=255)
+    film_cover_url = fields.CharField(max_length=255)
+    film_detail_url = fields.CharField(max_length=255)
+    film_star = fields.CharField(max_length=255)
+    film_price = fields.CharField(max_length=255)
+    del_flag = fields.BooleanField(null=True)
+
+    class Meta:
+        table_name = 'film_intro_item'
+
+    def __str__(self):
+        return f"{self.id}: {self.film_title}"
+
+
+# 电报信息
+
+class TelegramInfo(BaseModel, TimestampMixin):
+    film_title = fields.CharField(max_length=255)
+    film_cover_url = fields.CharField(max_length=255)
+    film_detail_url = fields.CharField(max_length=255)
+    film_star = fields.CharField(max_length=255)
+    film_price = fields.CharField(max_length=255)
+    del_flag = fields.BooleanField(null=True)
+
+    class Meta:
+        table_name = 'film_intro_item'
+
+    def __str__(self):
+        return f"{self.id}: {self.film_title}"
