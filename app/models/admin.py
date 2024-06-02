@@ -175,7 +175,7 @@ class TelegramInfo(BaseModel, TimestampMixin):
     del_flag = fields.BooleanField(null=True)
 
     class Meta:
-        table_name = 'film_intro_item'
+        table_name = 'telegram_info_detail'
 
     def __str__(self):
         return f"{self.id}: {self.film_title}"
