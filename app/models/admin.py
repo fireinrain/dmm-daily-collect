@@ -80,6 +80,9 @@ class DeptClosure(BaseModel, TimestampMixin):
     descendant = fields.IntField(description="子代")
     level = fields.IntField(default=0, description="深度")
 
+    class Meta:
+        table = "deptclosure"
+
 
 class Monitor(BaseModel, TimestampMixin):
     sn = fields.CharField(max_length=100, description="SN编号")
@@ -114,9 +117,6 @@ class DmmTask(BaseModel, TimestampMixin):
     class Meta:
         table = "dmm_av_daily"
 
-    def __str__(self) -> str:
-        return f"{self.fetch_url}:{self.has_run}:{self.run_date}"
-
 
 # 影片详情数据
 class FilmDetail(BaseModel, TimestampMixin):
@@ -142,7 +142,7 @@ class FilmDetail(BaseModel, TimestampMixin):
     del_flag = fields.BooleanField(null=True, default=False)
 
     class Meta:
-        table_name = 'film_detail_item'
+        table = "film_detail_item"
 
     def __str__(self):
         return f"{self.id}: {self.film_title}"
@@ -158,7 +158,7 @@ class FilmIntro(BaseModel, TimestampMixin):
     del_flag = fields.BooleanField(null=True)
 
     class Meta:
-        table_name = 'film_intro_item'
+        table = "film_intro_item"
 
     def __str__(self):
         return f"{self.id}: {self.film_title}"
@@ -175,7 +175,7 @@ class TelegramInfo(BaseModel, TimestampMixin):
     del_flag = fields.BooleanField(null=True)
 
     class Meta:
-        table_name = 'telegram_info_detail'
+        table = "telegram_info_detail"
 
     def __str__(self):
         return f"{self.id}: {self.film_title}"

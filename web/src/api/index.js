@@ -55,4 +55,9 @@ export default {
   createDmmTask: (data = {}) => request.post('/dmm/dmm-task/create', data),
   updateDmmTask: (data = {}) => request.post('/dmm/dmm-task/update', data),
   deleteDmmTask: (params = {}) => request.delete('/dmm/dmm-task/delete', { params }),
+  // dmm dmm-task
+  getFilmIntro: (params = {}) => request.get('/dmm/film-intro/list', { params }),
+  createFilmIntro: (data = {}) => request.post('/dmm/film-intro/create', data),
+  updateFilmIntro: (data = {}) => request.post('/dmm/film-intro/update', data),
+  deleteFilmIntro: (params = {}) => request.delete('/dmm/film-intro/delete', { params }),
 }

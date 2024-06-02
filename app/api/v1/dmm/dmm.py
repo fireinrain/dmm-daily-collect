@@ -81,7 +81,7 @@ async def list_film_intro(
     if film_price:
         q &= Q(film_price__contains=film_price)
     total, film_intro_objs = await film_intro_controller.list(page=page, page_size=page_size, search=q,
-                                                              order=["film_price", "id"])
+                                                              order=["-film_price", "id"])
     data = [await obj.to_dict() for obj in film_intro_objs]
     return SuccessExtra(data=data, total=total, page=page, page_size=page_size)
 

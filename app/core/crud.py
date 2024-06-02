@@ -19,7 +19,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     async def list(self, page: int, page_size: int, search: Q = Q(), order: list = []) -> Tuple[Total, List[ModelType]]:
         query = self.model.filter(search)
-        return await query.count(), await query.offset((page - 1) * page_size).limit(page_size).order_by(*order)
+        raw_sql = query.offset((page - 1) * page_size).limit(page_size).order_by(*order).sql()
+        print(f">>> sql execute: {raw_sql}")
+        records = await query.offset((page - 1) * page_size).limit(page_size).order_by(*order)
+        return await query.count(), records
 
     async def create(self, obj_in: CreateSchemaType) -> ModelType:
         if isinstance(obj_in, Dict):
