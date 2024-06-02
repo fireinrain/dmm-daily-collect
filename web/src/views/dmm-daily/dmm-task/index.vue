@@ -43,11 +43,7 @@ const handleEditWithDataConversion = (rowData) => {
   // Perform date string to date object conversion here
   const convertedData = {
     ...rowData,
-    report_time: new Date(rowData.report_time).getTime(), // Convert reportTime to date object
-    start_time: new Date(rowData.start_time).getTime(), // Convert startTime to date object
-    end_time: new Date(rowData.end_time).getTime(), // Convert endTime to date object
   }
-
   // Pass the converted data to handleEdit function
   handleEdit(convertedData)
 }
@@ -174,12 +170,12 @@ const columns = [
               icon: renderIcon('material-symbols:edit', { size: 16 }),
             }
           ),
-          [[vPermission, 'post/monitor/v1/api/update']]
+          [[vPermission, 'post/api/v1/dmm/dmm-task/update']]
         ),
         h(
           NPopconfirm,
           {
-            onPositiveClick: () => handleDelete({ monitor_id: row.id }, false),
+            onPositiveClick: () => handleDelete({ dmm_task_id: row.id }, false),
             onNegativeClick: () => {},
           },
           {
@@ -196,7 +192,7 @@ const columns = [
                     icon: renderIcon('material-symbols:delete-outline', { size: 16 }),
                   }
                 ),
-                [[vPermission, 'delete/api/v1/monitor/delete']]
+                [[vPermission, 'delete/api/v1/dmm/dmm-task/delete']]
               ),
             default: () => h('div', {}, '确定删除该历史记录吗?'),
           }
