@@ -1,17 +1,12 @@
-import httpx
-from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import APIRouter, Query
 from tortoise.expressions import Q
 
 from app.controllers.dmm import dmm_task_controller, film_intro_controller, film_detail_controller, \
     telegram_info_controller
-from app.core.bgtask import IntervalTaskScheduler
-from app.log import logger
-from app.models import MonitorSet
+
 from app.schemas import Success, SuccessExtra
 from app.schemas.dmm import DmmTaskCreate, DmmTaskUpdate, FilmIntroCreate, FilmIntroUpdate, FilmDetailCreate, \
     FilmDetailUpdate, TelegramInfoCreate, TelegramInfoUpdate
-from app.schemas.monitor import *
 
 router = APIRouter()
 
@@ -20,24 +15,17 @@ router = APIRouter()
 async def list_dmm_task(
         page: int = Query(1, description="页码"),
         page_size: int = Query(10, description="每页数量"),
-        has_run: bool = Query(True, description="是否已经运行"),
+        has_run: str = Query("", description="是否已经运行"),
         run_date: str = Query(None, description="运行日期"),
-        start_time: datetime = Query(None, description="记录起始时间"),
-        end_time: datetime = Query(None, description="记录结束时间"),
 ):
     q = Q()
     if has_run:
+        has_run = bool(has_run)
         q &= Q(has_run=has_run)
     if run_date:
         q &= Q(run_date__contains=run_date)
-    if start_time:
-        start_time = start_time.strftime("%Y-%m-%d")
-        q &= Q(run_date__gte=start_time)
-    if end_time:
-        end_time = end_time.strftime("%Y-%m-%d")
-        q &= Q(run_date__lte=end_time)
     total, moni_objs = await dmm_task_controller.list(page=page, page_size=page_size, search=q,
-                                                      order=["-report_time", "-id"])
+                                                      order=["-run_date", "-id"])
     data = [await obj.to_dict() for obj in moni_objs]
     return SuccessExtra(data=data, total=total, page=page, page_size=page_size)
 
@@ -63,7 +51,7 @@ async def create_dmm_task(
 async def update_dmm_task(
         dmm_task_in: DmmTaskUpdate,
 ):
-    await dmm_task_in.update(id=dmm_task_in.id, obj_in=dmm_task_in.update_dict())
+    await dmm_task_controller.update(id=dmm_task_in.id, obj_in=dmm_task_in.update_dict())
     return Success(msg="Update Successfully")
 
 

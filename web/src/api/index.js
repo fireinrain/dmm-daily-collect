@@ -50,4 +50,9 @@ export default {
   //monitor dash
   getMonitorSetsList: (params = {}) => request.get('/monitor/dash/list', { params }),
   getMonitorHisDetail: (params = {}) => request.get('/monitor/dash/detail', { params }),
+  // dmm dmm-task
+  getDmmTask: (params = {}) => request.get('/dmm/dmm-task/list', { params }),
+  createDmmTask: (data = {}) => request.post('/dmm/dmm-task/create', data),
+  updateDmmTask: (data = {}) => request.post('/dmm/dmm-task/update', data),
+  deleteDmmTask: (params = {}) => request.delete('/dmm/dmm-task/delete', { params }),
 }
