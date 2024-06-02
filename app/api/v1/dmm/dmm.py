@@ -125,52 +125,26 @@ async def delete_film_intro(
 async def list_film_detail(
         page: int = Query(1, description="页码"),
         page_size: int = Query(10, description="每页数量"),
-        film_title: str = Query(..., description="影片标题"),
-        film_publish_date: str = Query(..., description="影片发布日期"),
-        film_sell_date: str = Query(..., description="影片销售日期"),
-        film_length: str = Query(..., description="影片时长"),
-        film_stars: str = Query(..., description="影片演员"),
-        film_director: str = Query(..., description="影片导演"),
-        film_series: str = Query(..., description="影片系列"),
-        film_producers: str = Query(..., description="影片制片人"),
-        film_brand: str = Query(..., description="影片品牌"),
-        film_content_type: str = Query(..., description="影片内容类型"),
-        film_type: str = Query(..., description="影片类型"),
-        film_tags: str = Query(..., description="影片标签"),
-        film_code: str = Query(..., description="影片代码"),
-        film_desc: str = Query(..., description="影片描述"),
+        film_title: str = Query("", description="影片标题"),
+        film_sell_date: str = Query("", description="影片销售日期"),
+        film_stars: str = Query("", description="影片演员"),
+        film_tags: str = Query("", description="影片标签"),
+        film_code: str = Query("", description="影片代码"),
 ):
     q = Q()
     if film_title:
         q &= Q(film_title__contains=film_title)
-    if film_publish_date:
-        q &= Q(film_publish_date__contains=film_publish_date)
     if film_sell_date:
         q &= Q(film_sell_date__contains=film_sell_date)
-    if film_length:
-        q &= Q(film_length__contains=film_length)
     if film_stars:
         q &= Q(film_stars__contains=film_stars)
-    if film_director:
-        q &= Q(film_director__contains=film_director)
-    if film_series:
-        q &= Q(film_series__contains=film_series)
-    if film_producers:
-        q &= Q(film_producers__contains=film_producers)
-    if film_brand:
-        q &= Q(film_brand__contains=film_brand)
-    if film_content_type:
-        q &= Q(film_content_type__contains=film_content_type)
-    if film_type:
-        q &= Q(film_type__contains=film_type)
     if film_tags:
         q &= Q(film_tags__contains=film_tags)
     if film_code:
         q &= Q(film_code__contains=film_code)
-    if film_desc:
-        q &= Q(film_desc__contains=film_desc)
+
     total, film_detail_objs = await film_detail_controller.list(page=page, page_size=page_size, search=q,
-                                                                order=["film_sell_date", "id"])
+                                                                order=["-film_sell_date", "id"])
     data = [await obj.to_dict() for obj in film_detail_objs]
     return SuccessExtra(data=data, total=total, page=page, page_size=page_size)
 

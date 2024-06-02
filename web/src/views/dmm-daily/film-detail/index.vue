@@ -13,7 +13,7 @@ import { useCRUD } from '@/composables'
 // import { loginTypeMap, loginTypeOptions } from '@/constant/data'
 import api from '@/api'
 
-defineOptions({ name: '历史数据' })
+defineOptions({ name: '影片详情' })
 
 const $table = ref(null)
 const queryItems = ref({})
@@ -30,20 +30,17 @@ const {
   handleDelete,
   handleAdd,
 } = useCRUD({
-  name: '监控记录',
+  name: '影片详情记录',
   initForm: {},
-  doCreate: api.createMonitor,
-  doUpdate: api.updateMonitor,
-  doDelete: api.deleteMonitor,
+  doCreate: api.createFilmDetail,
+  doUpdate: api.updateFilmDetail,
+  doDelete: api.deleteFilmDetail,
   refresh: () => $table.value?.handleSearch(),
 })
 const handleEditWithDataConversion = (rowData) => {
   // Perform date string to date object conversion here
   const convertedData = {
     ...rowData,
-    report_time: new Date(rowData.report_time).getTime(), // Convert reportTime to date object
-    start_time: new Date(rowData.start_time).getTime(), // Convert startTime to date object
-    end_time: new Date(rowData.end_time).getTime(), // Convert endTime to date object
   }
 
   // Pass the converted data to handleEdit function
@@ -54,43 +51,138 @@ onMounted(() => {
   $table.value?.handleSearch()
 })
 
-const addHistoryRules = {
-  sn: [
+const addFilmDetailRules = {
+  film_detail_url: [
     {
       required: true,
-      message: '请输入SN编号',
+      message: '请输入影片详情URL',
       trigger: ['input', 'blur'],
     },
   ],
-  content: [
+  film_pic_url: [
     {
       required: true,
-      message: '请输入监控数据',
+      message: '请输入影片图片URL',
       trigger: ['input', 'blur'],
     },
   ],
-  report_time: [
+  film_poster_url: [
     {
       required: true,
-      type: 'date',
-      message: '请选择上报时间',
-      trigger: ['change', 'blur'],
+      message: '请输入影片海报URL',
+      trigger: ['input', 'blur'],
     },
   ],
-  start_time: [
+  film_title: [
     {
       required: true,
-      type: 'date',
-      message: '请选择起始时间',
-      trigger: ['change', 'blur'],
+      message: '请输入影片标题',
+      trigger: ['input', 'blur'],
     },
   ],
-  end_time: [
+  film_publish_date: [
     {
       required: true,
-      type: 'date',
-      message: '请选择结束时间',
-      trigger: ['change', 'blur'],
+      message: '请输入影片发布日期',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_sell_date: [
+    {
+      required: true,
+      message: '请输入影片销售日期',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_length: [
+    {
+      required: true,
+      message: '请输入影片时长',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_stars: [
+    {
+      required: true,
+      message: '请输入影片演员',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_director: [
+    {
+      required: false,
+      message: '请输入影片导演',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_series: [
+    {
+      required: true,
+      message: '请输入影片系列',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_producers: [
+    {
+      required: true,
+      message: '请输入影片制作人',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_brand: [
+    {
+      required: true,
+      message: '请输入影片品牌',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_content_type: [
+    {
+      required: false,
+      message: '请输入影片内容类型',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_type: [
+    {
+      required: true,
+      message: '请输入影片类型',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_tags: [
+    {
+      required: true,
+      message: '请输入影片标签',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_code: [
+    {
+      required: true,
+      message: '请输入影片编码',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_desc: [
+    {
+      required: true,
+      message: '请输入影片描述',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_sample_image_prefix: [
+    {
+      required: true,
+      message: '请输入影片样例图片前缀',
+      trigger: ['input', 'blur'],
+    },
+  ],
+  film_sample_images: [
+    {
+      required: true,
+      message: '请输入影片样例图片',
+      trigger: ['input', 'blur'],
     },
   ],
 }
@@ -104,45 +196,84 @@ const columns = [
     ellipsis: { tooltip: true },
   },
   {
-    title: 'SN编号',
-    key: 'sn',
+    title: '影片标题',
+    key: 'film_title',
     width: 'auto',
     align: 'center',
     ellipsis: { tooltip: true },
   },
   {
-    title: '上报数据',
-    key: 'content',
+    title: '影片销售日期',
+    key: 'film_sell_date',
+    width: 'auto',
+    align: 'center',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片时长',
+    key: 'film_length',
+    width: 'auto',
+    align: 'center',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片演员',
+    key: 'film_stars',
     align: 'center',
     width: 'auto',
     ellipsis: { tooltip: true },
   },
   {
-    title: '上报时间',
-    key: 'report_time',
+    title: '影片系列',
+    key: 'film_series',
+    align: 'center',
+    width: 'auto',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片制作人',
+    key: 'film_producers',
+    align: 'center',
+    width: 'auto',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片品牌',
+    key: 'film_brand',
+    align: 'center',
+    width: 'auto',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片编码',
+    key: 'film_code',
+    align: 'center',
+    width: 'auto',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片详情URL',
+    key: 'film_detail_url',
+    width: 'auto',
+    align: 'center',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '影片海报URL',
+    key: 'film_poster_url',
+    width: 'auto',
+    align: 'center',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '创建时间',
+    key: 'created_at',
     width: 'auto',
     align: 'center',
     ellipsis: { tooltip: true },
     render(row) {
-      return new Date(row.report_time).toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      })
-    },
-  },
-  {
-    title: '起始时间',
-    key: 'start_time',
-    width: 'auto',
-    align: 'center',
-    ellipsis: { tooltip: true },
-    render(row) {
-      return row.start_time
-        ? new Date(row.start_time).toLocaleString('zh-CN', {
+      return row.created_at
+        ? new Date(row.created_at).toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -154,14 +285,14 @@ const columns = [
     },
   },
   {
-    title: '结束时间',
-    key: 'end_time',
+    title: '更新时间',
+    key: 'updated_at',
     width: 'auto',
     align: 'center',
     ellipsis: { tooltip: true },
     render(row) {
-      return row.end_time
-        ? new Date(row.end_time).toLocaleString('zh-CN', {
+      return row.updated_at
+        ? new Date(row.updated_at).toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -196,12 +327,12 @@ const columns = [
               icon: renderIcon('material-symbols:edit', { size: 16 }),
             }
           ),
-          [[vPermission, 'post/monitor/v1/api/update']]
+          [[vPermission, 'post/api/v1/dmm/film-detail/update']]
         ),
         h(
           NPopconfirm,
           {
-            onPositiveClick: () => handleDelete({ monitor_id: row.id }, false),
+            onPositiveClick: () => handleDelete({ film_detail_id: row.id }, false),
             onNegativeClick: () => {},
           },
           {
@@ -218,7 +349,7 @@ const columns = [
                     icon: renderIcon('material-symbols:delete-outline', { size: 16 }),
                   }
                 ),
-                [[vPermission, 'delete/api/v1/monitor/delete']]
+                [[vPermission, 'delete/api/v1/dmm/film-detail/delete']]
               ),
             default: () => h('div', {}, '确定删除该历史记录吗?'),
           }
@@ -231,16 +362,17 @@ const columns = [
 
 <template>
   <!-- 业务页面 -->
-  <CommonPage show-footer title="监控历史列表">
+  <CommonPage show-footer title="影片简介列表">
     <template #action>
       <div>
         <NButton
-          v-permission="'post/api/v1/monitor/create'"
+          v-permission="'post/api/v1/dmm/film-detail/create'"
           class="float-right mr-15"
           type="primary"
           @click="handleAdd"
         >
-          <TheIcon icon="material-symbols:add" :size="18" class="mr-5" />新建历史记录
+          <TheIcon icon="material-symbols:add" :size="18" class="mr-5" />
+          新建影片详情
         </NButton>
       </div>
     </template>
@@ -249,34 +381,52 @@ const columns = [
       ref="$table"
       v-model:query-items="queryItems"
       :columns="columns"
-      :get-data="api.getMonitors"
+      :get-data="api.getFilmDetail"
     >
       <template #queryBar>
-        <QueryBarItem label="SN编号" :label-width="50">
+        <QueryBarItem label="影片标题" :label-width="60">
           <NInput
-            v-model:value="queryItems.sn"
+            v-model:value="queryItems.film_title"
             clearable
             type="text"
-            placeholder="请输入SN编号"
+            placeholder="请输入影片标题"
             @keypress.enter="$table?.handleSearch()"
           />
         </QueryBarItem>
-        <QueryBarItem label="起始时间" :label-width="60">
-          <NDatePicker
-            v-model:value="queryItems.start_time"
+        <QueryBarItem label="发售日期" :label-width="60">
+          <NInput
+            v-model:value="queryItems.film_sell_date"
             clearable
-            type="datetime"
-            placeholder="请输入起始时间"
-            @update:value="$table?.handleSearch()"
+            type="text"
+            placeholder="请输入发售日期"
+            @keypress.enter="$table?.handleSearch()"
           />
         </QueryBarItem>
-        <QueryBarItem label="结束时间" :label-width="60">
-          <NDatePicker
-            v-model:value="queryItems.end_time"
+        <QueryBarItem label="影片演员" :label-width="60">
+          <NInput
+            v-model:value="queryItems.film_star"
             clearable
-            type="datetime"
-            placeholder="请输入结束时间"
-            @update:value="$table?.handleSearch()"
+            type="text"
+            placeholder="请输入影片演员"
+            @keypress.enter="$table?.handleSearch()"
+          />
+        </QueryBarItem>
+        <QueryBarItem label="影片番号" :label-width="60">
+          <NInput
+            v-model:value="queryItems.film_code"
+            clearable
+            type="text"
+            placeholder="请输入影片番号"
+            @keypress.enter="$table?.handleSearch()"
+          />
+        </QueryBarItem>
+        <QueryBarItem label="影片标签" :label-width="60">
+          <NInput
+            v-model:value="queryItems.film_tags"
+            clearable
+            type="text"
+            placeholder="请输入影片标签"
+            @keypress.enter="$table?.handleSearch()"
           />
         </QueryBarItem>
       </template>
@@ -295,39 +445,99 @@ const columns = [
         label-align="left"
         :label-width="80"
         :model="modalForm"
-        :rules="addHistoryRules"
+        :rules="addFilmDetailRules"
       >
-        <NFormItem label="SN编号" path="sn">
-          <NInput v-model:value="modalForm.sn" clearable placeholder="请输入SN编号" />
+        <NFormItem label="影片标题" path="film_title">
+          <NInput v-model:value="modalForm.film_title" clearable placeholder="请输入影片标题" />
         </NFormItem>
-        <NFormItem label="上报数据" path="content">
-          <NInput v-model:value="modalForm.content" clearable placeholder="请输入上报数据" />
-        </NFormItem>
-        <NFormItem label="上报时间" path="report_time">
-          <NDatePicker
-            v-model:value="modalForm.report_time"
-            type="datetime"
+        <NFormItem label="影片发布日期" path="film_publish_date">
+          <NInput
+            v-model:value="modalForm.film_publish_date"
             clearable
-            placeholder="请输入上报时间"
-            @update:value="modalFormRef.value?.validateField('report_time')"
+            placeholder="请输入影片发布日期"
           />
         </NFormItem>
-        <NFormItem label="起始时间" path="start_time">
-          <NDatePicker
-            v-model:value="modalForm.start_time"
-            type="datetime"
+        <NFormItem label="影片销售日期" path="film_sell_date">
+          <NInput
+            v-model:value="modalForm.film_sell_date"
             clearable
-            placeholder="请输入起始时间"
-            @update:value="modalFormRef.value?.validateField('start_time')"
+            placeholder="请输入影片销售日期"
           />
         </NFormItem>
-        <NFormItem label="结束时间" path="end_time">
-          <NDatePicker
-            v-model:value="modalForm.end_time"
-            type="datetime"
+        <NFormItem label="影片时长" path="film_length">
+          <NInput v-model:value="modalForm.film_length" clearable placeholder="请输入影片时长" />
+        </NFormItem>
+        <NFormItem label="影片演员" path="film_stars">
+          <NInput v-model:value="modalForm.film_stars" clearable placeholder="请输入影片演员" />
+        </NFormItem>
+        <NFormItem label="影片导演" path="film_director">
+          <NInput v-model:value="modalForm.film_director" clearable placeholder="请输入影片导演" />
+        </NFormItem>
+        <NFormItem label="影片系列" path="film_series">
+          <NInput v-model:value="modalForm.film_series" clearable placeholder="请输入影片系列" />
+        </NFormItem>
+        <NFormItem label="影片制作人" path="film_producers">
+          <NInput
+            v-model:value="modalForm.film_producers"
             clearable
-            placeholder="请输入结束时间"
-            @update:value="modalFormRef.value?.validateField('end_time')"
+            placeholder="请输入影片制作人"
+          />
+        </NFormItem>
+        <NFormItem label="影片品牌" path="film_brand">
+          <NInput v-model:value="modalForm.film_brand" clearable placeholder="请输入影片品牌" />
+        </NFormItem>
+        <NFormItem label="影片内容类型" path="film_content_type">
+          <NInput
+            v-model:value="modalForm.film_content_type"
+            clearable
+            placeholder="请输入影片内容类型"
+          />
+        </NFormItem>
+        <NFormItem label="影片类型" path="film_type">
+          <NInput v-model:value="modalForm.film_type" clearable placeholder="请输入影片类型" />
+        </NFormItem>
+        <NFormItem label="影片标签" path="film_tags">
+          <NInput v-model:value="modalForm.film_tags" clearable placeholder="请输入影片标签" />
+        </NFormItem>
+        <NFormItem label="影片编码" path="film_code">
+          <NInput v-model:value="modalForm.film_code" clearable placeholder="请输入影片编码" />
+        </NFormItem>
+        <NFormItem label="影片描述" path="film_desc">
+          <NInput v-model:value="modalForm.film_desc" clearable placeholder="请输入影片描述" />
+        </NFormItem>
+        <NFormItem label="影片样例图片前缀" path="film_sample_image_prefix">
+          <NInput
+            v-model:value="modalForm.film_sample_image_prefix"
+            clearable
+            placeholder="请输入影片样例图片前缀"
+          />
+        </NFormItem>
+        <NFormItem label="影片样例图片" path="film_sample_images">
+          <NInput
+            v-model:value="modalForm.film_sample_images"
+            clearable
+            placeholder="请输入影片样例图片"
+          />
+        </NFormItem>
+        <NFormItem label="影片图片URL" path="film_pic_url">
+          <NInput
+            v-model:value="modalForm.film_pic_url"
+            clearable
+            placeholder="请输入影片图片URL"
+          />
+        </NFormItem>
+        <NFormItem label="影片海报URL" path="film_poster_url">
+          <NInput
+            v-model:value="modalForm.film_poster_url"
+            clearable
+            placeholder="请输入影片海报URL"
+          />
+        </NFormItem>
+        <NFormItem label="影片详情URL" path="film_detail_url">
+          <NInput
+            v-model:value="modalForm.film_detail_url"
+            clearable
+            placeholder="请输入影片详情URL"
           />
         </NFormItem>
       </NForm>

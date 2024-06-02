@@ -233,7 +233,7 @@ const columns = [
     <template #action>
       <div>
         <NButton
-          v-permission="'post/api/v1/monitor/create'"
+          v-permission="'post/api/v1/dmm/film-intro/create'"
           class="float-right mr-15"
           type="primary"
           @click="handleAdd"
