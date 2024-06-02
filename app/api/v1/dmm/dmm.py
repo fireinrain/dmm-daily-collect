@@ -187,22 +187,24 @@ async def delete_film_detail(
 async def list_telegram_info(
         page: int = Query(1, description="页码"),
         page_size: int = Query(10, description="每页数量"),
-        telegraph_post_url: str = Query(None, description="电报备份链接"),
-        film_detail_id: int = Query(None, description="影片详情ID"),
-        has_create_post: bool = Query(None, description="是否创建Telegraph"),
-        has_push_channel: bool = Query(None, description="是否推送Telegram频道")
+        telegraph_post_url: str = Query("", description="电报备份链接"),
+        film_detail_id: int = Query(0, description="影片详情ID"),
+        has_create_post: str = Query("", description="是否创建Telegraph"),
+        has_push_channel: str = Query("", description="是否推送Telegram频道")
 ):
     q = Q()
     if telegraph_post_url:
         q &= Q(telegraph_post_url__contains=telegraph_post_url)
     if film_detail_id:
         q &= Q(film_detail_id=film_detail_id)
-    if has_create_post is not None:
+    if has_create_post and (has_create_post.strip()=="true" or has_create_post.strip()=="false"):
+        has_create_post = bool(has_create_post.strip)
         q &= Q(has_create_post=has_create_post)
-    if has_push_channel is not None:
+    if has_push_channel and (has_push_channel.strip()=="true" or has_push_channel.strip()=="false"):
+        has_push_channel = bool(has_push_channel.strip)
         q &= Q(has_push_channel=has_push_channel)
     total, telegram_info_objs = await telegram_info_controller.list(page=page, page_size=page_size, search=q,
-                                                                    order=["id"])
+                                                                    order=["has_create_post", "-id"])
     data = [await obj.to_dict() for obj in telegram_info_objs]
     return SuccessExtra(data=data, total=total, page=page, page_size=page_size)
 

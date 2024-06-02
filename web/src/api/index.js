@@ -66,4 +66,9 @@ export default {
   createFilmDetail: (data = {}) => request.post('/dmm/film-detail/create', data),
   updateFilmDetail: (data = {}) => request.post('/dmm/film-detail/update', data),
   deleteFilmDetail: (params = {}) => request.delete('/dmm/film-detail/delete', { params }),
+  // dmm telegram-info
+  getTelegramInfo: (params = {}) => request.get('/dmm/telegram-info/list', { params }),
+  createTelegramInfo: (data = {}) => request.post('/dmm/telegram-info/create', data),
+  updateTelegramInfo: (data = {}) => request.post('/dmm/telegram-info/update', data),
+  deleteTelegramInfo: (params = {}) => request.delete('/dmm/telegram-info/delete', { params }),
 }

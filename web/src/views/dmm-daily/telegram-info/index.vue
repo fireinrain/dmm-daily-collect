@@ -13,7 +13,7 @@ import { useCRUD } from '@/composables'
 // import { loginTypeMap, loginTypeOptions } from '@/constant/data'
 import api from '@/api'
 
-defineOptions({ name: '历史数据' })
+defineOptions({ name: '电报信息' })
 
 const $table = ref(null)
 const queryItems = ref({})
@@ -30,20 +30,17 @@ const {
   handleDelete,
   handleAdd,
 } = useCRUD({
-  name: '监控记录',
+  name: '电报信息记录',
   initForm: {},
-  doCreate: api.createMonitor,
-  doUpdate: api.updateMonitor,
-  doDelete: api.deleteMonitor,
+  doCreate: api.createTelegramInfo,
+  doUpdate: api.updateTelegramInfo,
+  doDelete: api.deleteTelegramInfo,
   refresh: () => $table.value?.handleSearch(),
 })
 const handleEditWithDataConversion = (rowData) => {
   // Perform date string to date object conversion here
   const convertedData = {
     ...rowData,
-    report_time: new Date(rowData.report_time).getTime(), // Convert reportTime to date object
-    start_time: new Date(rowData.start_time).getTime(), // Convert startTime to date object
-    end_time: new Date(rowData.end_time).getTime(), // Convert endTime to date object
   }
 
   // Pass the converted data to handleEdit function
@@ -54,43 +51,33 @@ onMounted(() => {
   $table.value?.handleSearch()
 })
 
-const addHistoryRules = {
-  sn: [
+const addTelegramInfoRules = {
+  telegraph_post_url: [
     {
       required: true,
-      message: '请输入SN编号',
+      message: '请输入Telegraph链接',
       trigger: ['input', 'blur'],
     },
   ],
-  content: [
+  film_detail_id: [
     {
       required: true,
-      message: '请输入监控数据',
+      message: '请输入影片详情ID',
       trigger: ['input', 'blur'],
     },
   ],
-  report_time: [
+  has_create_post: [
     {
       required: true,
-      type: 'date',
-      message: '请选择上报时间',
-      trigger: ['change', 'blur'],
+      message: '请输入是否已创建Telegraph',
+      trigger: ['input', 'blur'],
     },
   ],
-  start_time: [
+  has_push_channel: [
     {
       required: true,
-      type: 'date',
-      message: '请选择起始时间',
-      trigger: ['change', 'blur'],
-    },
-  ],
-  end_time: [
-    {
-      required: true,
-      type: 'date',
-      message: '请选择结束时间',
-      trigger: ['change', 'blur'],
+      message: '请输入是否已推送到TG频道',
+      trigger: ['input', 'blur'],
     },
   ],
 }
@@ -104,45 +91,48 @@ const columns = [
     ellipsis: { tooltip: true },
   },
   {
-    title: 'SN编号',
-    key: 'sn',
+    title: '影片详情ID',
+    key: 'film_detail_id',
     width: 'auto',
     align: 'center',
     ellipsis: { tooltip: true },
   },
   {
-    title: '上报数据',
-    key: 'content',
+    title: '创建Telegraph',
+    key: 'has_create_post',
     align: 'center',
     width: 'auto',
-    ellipsis: { tooltip: true },
-  },
-  {
-    title: '上报时间',
-    key: 'report_time',
-    width: 'auto',
-    align: 'center',
     ellipsis: { tooltip: true },
     render(row) {
-      return new Date(row.report_time).toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      })
+      return row.has_create_post ? '已创建' : '未创建'
     },
   },
   {
-    title: '起始时间',
-    key: 'start_time',
+    title: '推送频道',
+    key: 'has_push_channel',
     width: 'auto',
     align: 'center',
     ellipsis: { tooltip: true },
     render(row) {
-      return row.start_time
-        ? new Date(row.start_time).toLocaleString('zh-CN', {
+      return row.has_push_channel ? '已推送' : '未推送'
+    },
+  },
+  {
+    title: 'Telegraph链接',
+    key: 'telegraph_post_url',
+    width: 'auto',
+    align: 'center',
+    ellipsis: { tooltip: true },
+  },
+  {
+    title: '创建时间',
+    key: 'created_at',
+    width: 'auto',
+    align: 'center',
+    ellipsis: { tooltip: true },
+    render(row) {
+      return row.created_at
+        ? new Date(row.created_at).toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -154,14 +144,14 @@ const columns = [
     },
   },
   {
-    title: '结束时间',
-    key: 'end_time',
+    title: '更新时间',
+    key: 'updated_at',
     width: 'auto',
     align: 'center',
     ellipsis: { tooltip: true },
     render(row) {
-      return row.end_time
-        ? new Date(row.end_time).toLocaleString('zh-CN', {
+      return row.updated_at
+        ? new Date(row.updated_at).toLocaleString('zh-CN', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -196,12 +186,12 @@ const columns = [
               icon: renderIcon('material-symbols:edit', { size: 16 }),
             }
           ),
-          [[vPermission, 'post/monitor/v1/api/update']]
+          [[vPermission, 'post/api/v1/dmm/telegram-info/update']]
         ),
         h(
           NPopconfirm,
           {
-            onPositiveClick: () => handleDelete({ monitor_id: row.id }, false),
+            onPositiveClick: () => handleDelete({ telegram_info_id: row.id }, false),
             onNegativeClick: () => {},
           },
           {
@@ -218,7 +208,7 @@ const columns = [
                     icon: renderIcon('material-symbols:delete-outline', { size: 16 }),
                   }
                 ),
-                [[vPermission, 'delete/api/v1/monitor/delete']]
+                [[vPermission, 'delete/api/v1/dmm/telegram-info/delete']]
               ),
             default: () => h('div', {}, '确定删除该历史记录吗?'),
           }
@@ -231,16 +221,17 @@ const columns = [
 
 <template>
   <!-- 业务页面 -->
-  <CommonPage show-footer title="监控历史列表">
+  <CommonPage show-footer title="电报信息列表">
     <template #action>
       <div>
         <NButton
-          v-permission="'post/api/v1/monitor/create'"
+          v-permission="'post/api/v1/dmm/telegram-info/create'"
           class="float-right mr-15"
           type="primary"
           @click="handleAdd"
         >
-          <TheIcon icon="material-symbols:add" :size="18" class="mr-5" />新建历史记录
+          <TheIcon icon="material-symbols:add" :size="18" class="mr-5" />
+          新建电报信息
         </NButton>
       </div>
     </template>
@@ -249,34 +240,43 @@ const columns = [
       ref="$table"
       v-model:query-items="queryItems"
       :columns="columns"
-      :get-data="api.getMonitors"
+      :get-data="api.getTelegramInfo"
     >
       <template #queryBar>
-        <QueryBarItem label="SN编号" :label-width="50">
+        <QueryBarItem label="影片详情ID" :label-width="60">
           <NInput
-            v-model:value="queryItems.sn"
+            v-model:value="queryItems.film_detail_id"
             clearable
             type="text"
-            placeholder="请输入SN编号"
+            placeholder="请输入影片详情ID"
             @keypress.enter="$table?.handleSearch()"
           />
         </QueryBarItem>
-        <QueryBarItem label="起始时间" :label-width="60">
-          <NDatePicker
-            v-model:value="queryItems.start_time"
+        <QueryBarItem label="已创建Telegraph" :label-width="90">
+          <NInput
+            v-model:value="queryItems.has_create_post"
             clearable
-            type="datetime"
-            placeholder="请输入起始时间"
-            @update:value="$table?.handleSearch()"
+            type="text"
+            placeholder="请输入是否创建Telegraph"
+            @keypress.enter="$table?.handleSearch()"
           />
         </QueryBarItem>
-        <QueryBarItem label="结束时间" :label-width="60">
-          <NDatePicker
-            v-model:value="queryItems.end_time"
+        <QueryBarItem label="已推送电报频道" :label-width="70">
+          <NInput
+            v-model:value="queryItems.has_push_channel"
             clearable
-            type="datetime"
-            placeholder="请输入结束时间"
-            @update:value="$table?.handleSearch()"
+            type="text"
+            placeholder="请输入是否推送频道"
+            @keypress.enter="$table?.handleSearch()"
+          />
+        </QueryBarItem>
+        <QueryBarItem label="Telegraph链接" :label-width="70">
+          <NInput
+            v-model:value="queryItems.telegraph_post_url"
+            clearable
+            type="text"
+            placeholder="请输入Telegraph链接"
+            @keypress.enter="$table?.handleSearch()"
           />
         </QueryBarItem>
       </template>
@@ -295,39 +295,37 @@ const columns = [
         label-align="left"
         :label-width="80"
         :model="modalForm"
-        :rules="addHistoryRules"
+        :rules="addTelegramInfoRules"
       >
-        <NFormItem label="SN编号" path="sn">
-          <NInput v-model:value="modalForm.sn" clearable placeholder="请输入SN编号" />
-        </NFormItem>
-        <NFormItem label="上报数据" path="content">
-          <NInput v-model:value="modalForm.content" clearable placeholder="请输入上报数据" />
-        </NFormItem>
-        <NFormItem label="上报时间" path="report_time">
-          <NDatePicker
-            v-model:value="modalForm.report_time"
-            type="datetime"
+        <NFormItem label="影片详情ID" path="film_detail_id">
+          <NInput
+            v-model:value="modalForm.film_detail_id"
             clearable
-            placeholder="请输入上报时间"
-            @update:value="modalFormRef.value?.validateField('report_time')"
+            placeholder="请输入影片详情ID"
           />
         </NFormItem>
-        <NFormItem label="起始时间" path="start_time">
-          <NDatePicker
-            v-model:value="modalForm.start_time"
-            type="datetime"
+
+        <NFormItem label="已创建Telegraph" path="has_create_post">
+          <NInput
+            v-model:value="modalForm.has_create_post"
             clearable
-            placeholder="请输入起始时间"
-            @update:value="modalFormRef.value?.validateField('start_time')"
+            placeholder="请输入已创建Telegraph"
           />
         </NFormItem>
-        <NFormItem label="结束时间" path="end_time">
-          <NDatePicker
-            v-model:value="modalForm.end_time"
-            type="datetime"
+
+        <NFormItem label="已推送频道" path="has_push_channel">
+          <NInput
+            v-model:value="modalForm.has_push_channel"
             clearable
-            placeholder="请输入结束时间"
-            @update:value="modalFormRef.value?.validateField('end_time')"
+            placeholder="请输入已推送频道"
+          />
+        </NFormItem>
+
+        <NFormItem label="Telegraph链接" path="telegraph_post_url">
+          <NInput
+            v-model:value="modalForm.telegraph_post_url"
+            clearable
+            placeholder="请输入Telegraph链接"
           />
         </NFormItem>
       </NForm>

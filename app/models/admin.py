@@ -167,11 +167,10 @@ class FilmIntro(BaseModel, TimestampMixin):
 # 电报信息
 
 class TelegramInfo(BaseModel, TimestampMixin):
-    film_title = fields.CharField(max_length=255)
-    film_cover_url = fields.CharField(max_length=255)
-    film_detail_url = fields.CharField(max_length=255)
-    film_star = fields.CharField(max_length=255)
-    film_price = fields.CharField(max_length=255)
+    film_detail_id = fields.CharField(max_length=255)
+    has_create_post = fields.BooleanField(default=False)
+    has_push_channel = fields.BooleanField(default=False)
+    telegraph_post_url = fields.CharField(max_length=255)
     del_flag = fields.BooleanField(null=True)
 
     class Meta:
